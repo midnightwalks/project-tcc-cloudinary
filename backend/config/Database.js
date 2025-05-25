@@ -1,8 +1,6 @@
 import { Sequelize } from "sequelize";
 import { getEnv } from "../utils.js";
 
-dotenv.config();
-
 const {
   DB_HOST: host,
   DB_USERNAME: username,
