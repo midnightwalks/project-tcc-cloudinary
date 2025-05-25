@@ -11,7 +11,10 @@ import route from "./routes/route.js";
 import syncDB from "./model/index.js"; // Pastikan ini return Promise/async
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
 const corsOptions = {
   origin: ["http://localhost:3000"], // sesuaikan dengan frontend URL
