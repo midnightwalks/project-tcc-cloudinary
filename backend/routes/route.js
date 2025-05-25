@@ -59,9 +59,4 @@ router.post("/merchandise", verifyToken, upload.single('gambar'), createMerchand
 router.put("/merchandise/:id", verifyToken, upload.single('gambar'), updateMerchandise);
 router.delete("/merchandise/:id", verifyToken, deleteMerchandise);
 
-// ====== CATCH ALL ROUTE ======
-router.all("*", (req, res) => {
-  res.status(404).json({ message: "Route not found" });
-});
-
 export default router;
