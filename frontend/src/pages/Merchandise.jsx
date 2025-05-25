@@ -285,12 +285,25 @@ function DaftarMerchandiseApp() {
             placeholder="Deskripsi"
             className="w-full px-3 py-2 border rounded mb-3"
           />
+          {/* File input for image upload */}
           <input
+            id="gambar-input"
             type="file"
             accept="image/*"
-            onChange={(e) => setGambar(e.target.files[0])}
-            className="w-full px-3 py-2 border rounded mb-5"
+            onChange={handleFileChange}
+            className="w-full px-3 py-2 border border-purple-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-purple-300"
           />
+          
+          {/* Image preview */}
+          {gambarPreview && (
+            <div className="mb-3">
+              <img
+                src={gambarPreview}
+                alt="Preview"
+                className="w-full h-32 object-cover rounded border"
+              />
+            </div>
+          )}
 
           <button
             onClick={addMerch}
