@@ -1,6 +1,9 @@
 import Users from "../model/UsersModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { getEnv } from "../utils.js";
+
+const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = getEnv();
 
 export const Register = async (req, res) => {
   const { username, password } = req.body;
@@ -45,12 +48,12 @@ export const Login = async (req, res) => {
     // JWT Sign
     const accessToken = jwt.sign(
       { id: user.id, username: user.username },
-      process.env.ACCESS_TOKEN_SECRET,
+      ACCESS_TOKEN_SECRET,
       { expiresIn: "30s" }
     );
     const refreshToken = jwt.sign(
       { id: user.id, username: user.username },
-      process.env.REFRESH_TOKEN_SECRET,
+      REFRESH_TOKEN_SECRET,
       { expiresIn: "1d" }
     );
 
@@ -91,7 +94,7 @@ export const refreshToken = async (req, res) => {
     if (!user) return res.status(403).json({ message: "User tidak ditemukan" });
 
     // Verify JWT
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
+    jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err, decoded) => {
       if (err) {
         return res.status(403).json({ message: "Invalid refresh token" });
       }
@@ -99,7 +102,7 @@ export const refreshToken = async (req, res) => {
       const { id, username } = user; // Pastikan data ini sesuai dengan payload JWT sebelumnya
       const accessToken = jwt.sign(
         { id, username },
-        process.env.ACCESS_TOKEN_SECRET,
+        ACCESS_TOKEN_SECRET,
         { expiresIn: "30s" }
       );
 

@@ -8,7 +8,7 @@ const {
   DB_USERNAME: username,
   DB_PASSWORD: password,
   DB_NAME: database,
-} = process.env;
+} = getEnv();
 
 const db = new Sequelize(database, username, password, {
   host: host,
