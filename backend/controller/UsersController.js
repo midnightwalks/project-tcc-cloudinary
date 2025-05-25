@@ -100,11 +100,9 @@ export const refreshToken = async (req, res) => {
       }
 
       const { id, username } = user; // Pastikan data ini sesuai dengan payload JWT sebelumnya
-      const accessToken = jwt.sign(
-        { id, username },
-        ACCESS_TOKEN_SECRET,
-        { expiresIn: "30s" }
-      );
+      const accessToken = jwt.sign({ id, username }, ACCESS_TOKEN_SECRET, {
+        expiresIn: "30s",
+      });
 
       res.json({ accessToken });
     });
@@ -144,4 +142,3 @@ export const logout = async (req, res) => {
     });
   }
 };
-

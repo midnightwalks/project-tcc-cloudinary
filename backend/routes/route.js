@@ -46,15 +46,15 @@ router.get("/token", refreshToken);
 router.delete("/logout", logout);
 
 // ====== DAFARKONSER ROUTES (pakai Cloudinary) ======
-router.get("/daftarkonser", getKonser);
-router.get("/daftarkonser/:id", getKonser);
+router.get("/daftarkonser", verifyToken, getKonser);
+router.get("/daftarkonser/:id", verifyToken, getKonser);
 router.post("/daftarkonser", verifyToken, upload.single('gambar'), createKonser);
 router.put("/daftarkonser/:id", verifyToken, upload.single('gambar'), updateKonser);
 router.delete("/daftarkonser/:id", verifyToken, deleteKonser);
 
 // ====== MERCHANDISE ROUTES (sudah dimodifikasi untuk pakai Cloudinary juga) ======
-router.get("/merchandise", getMerchandise);
-router.get("/merchandise/:id", getMerchandise);
+router.get("/merchandise", verifyToken, getMerchandise);
+router.get("/merchandise/:id", verifyToken, getMerchandise);
 router.post("/merchandise", verifyToken, upload.single('gambar'), createMerchandise);
 router.put("/merchandise/:id", verifyToken, upload.single('gambar'), updateMerchandise);
 router.delete("/merchandise/:id", verifyToken, deleteMerchandise);

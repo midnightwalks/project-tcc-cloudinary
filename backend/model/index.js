@@ -23,5 +23,4 @@ Merchandise.belongsTo(Users, { foreignKey: "userId" });
   }
 })();
 
-export default syncDB;
 export { Users, DaftarKonser, Merchandise };
