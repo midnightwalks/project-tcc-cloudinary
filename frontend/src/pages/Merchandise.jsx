@@ -13,8 +13,7 @@ function DaftarMerchandiseApp() {
   const [harga, setHarga] = useState("");
   const [stok, setStok] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
-  const [gambarFile, setGambarFile] = useState(null); // File object
-  const [gambarPreview, setGambarPreview] = useState(""); // Preview URL
+  const [gambar, setGambar] = useState("");
 
   useEffect(() => {
     fetchMerch();
@@ -34,76 +33,8 @@ function DaftarMerchandiseApp() {
     }
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Validate file type
-      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-      if (!allowedTypes.includes(file.type)) {
-        alert('Hanya file gambar (JPEG, PNG, GIF) yang diperbolehkan!');
-        return;
-      }
-
-      // Validate file size (max 5MB)
-      const maxSize = 5 * 1024 * 1024; // 5MB
-      if (file.size > maxSize) {
-        alert('Ukuran file terlalu besar! Maksimal 5MB.');
-        return;
-      }
-
-      setGambarFile(file);
-      
-      // Create preview URL
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setGambarPreview(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Handle file change for editing
-  const handleEditFileChange = (id, e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Validate file type
-      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-      if (!allowedTypes.includes(file.type)) {
-        alert('Hanya file gambar (JPEG, PNG, GIF) yang diperbolehkan!');
-        return;
-      }
-
-      // Validate file size (max 5MB)
-      const maxSize = 5 * 1024 * 1024; // 5MB
-      if (file.size > maxSize) {
-        alert('Ukuran file terlalu besar! Maksimal 5MB.');
-        return;
-      }
-
-      // Update the konser list with file object and preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setKonserList((prev) =>
-          prev.map((konser) =>
-            konser.id === id 
-              ? { 
-                  ...konser, 
-                  gambarFile: file,
-                  gambarPreview: e.target.result
-                } 
-              : konser
-          )
-        );
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const addMerch = async () => {
-    if (!namaMerch.trim() || !harga || !stok || !deskripsi.trim()) {
-      alert('Mohon lengkapi semua field yang wajib diisi!');
-      return;
-    }
+    if (!namaMerch.trim() || !harga || !stok || !deskripsi.trim()) return;
 
     try {
       const response = await axios.post(`${BASE_URL}/merchandise`, {
@@ -350,22 +281,12 @@ function DaftarMerchandiseApp() {
             className="w-full px-3 py-2 border border-purple-300 rounded mb-3 resize-y focus:outline-none focus:ring-2 focus:ring-purple-300"
           />
           <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setGambar(e.target.files[0])}
-            className="w-full px-3 py-2 border border-purple-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-purple-300"
+            type="text"
+            value={gambar}
+            onChange={(e) => setGambar(e.target.value)}
+            placeholder="URL Gambar (optional)"
+            className="w-full px-3 py-2 border border-purple-300 rounded mb-5 focus:outline-none focus:ring-2 focus:ring-purple-300"
           />
-
-          {/* Image preview */}
-          {gambarPreview && (
-            <div className="mb-3">
-              <img
-                src={gambarPreview}
-                alt="Preview"
-                className="w-full h-32 object-cover rounded border"
-              />
-            </div>
-          )}
 
           <button
             onClick={addMerch}
