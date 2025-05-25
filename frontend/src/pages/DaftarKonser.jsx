@@ -339,17 +339,18 @@ function DaftarKonserApp() {
                   ) : (
                     <>
                       {konser.gambar ? (
-                        <img
-  src={konser.gambar}
-  alt={konser.nama_konser}
-  className="h-40 w-full object-cover rounded mb-3"
-  onLoad={() => console.log('Image loaded:', konser.gambar)}
-  onError={(e) => {
-    console.error('Image failed to load:', konser.gambar);
-    e.target.src =
-      'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100%" height="100%" fill="%23f3f4f6"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%236b7280">No Image</text></svg>';
-  }}
-/>
+                          <img
+                            src={`https://res.cloudinary.com/dn7rrufkn/image/upload/Konser-App/Konser_Images/${konser.gambar}`}
+                            alt={`${konser.nama_konser}`}
+                            className="h-40 w-full object-cover rounded mb-3"
+                            onLoad={() => console.log('Image loaded:', konser.gambar)}
+                            onError={(e) => {
+                              console.error('Image failed to load:', konser.gambar);
+                              e.target.src =
+                                'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100%" height="100%" fill="%23f3f4f6"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%236b7280">No Image</text></svg>';
+                            }}
+                          />
+
                       ) : (
                         <div className="h-40 w-full bg-gray-200 rounded mb-3 flex items-center justify-center text-gray-400 italic">
                           No Image
