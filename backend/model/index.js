@@ -11,18 +11,17 @@ Users.hasMany(Merchandise, { foreignKey: "userId", onDelete: "CASCADE" });
 Merchandise.belongsTo(Users, { foreignKey: "userId" });
 
 // Fungsi sinkronisasi database
-const syncDB = async () => {
+(async () => {
   try {
     await db.authenticate();
     console.log("Koneksi database berhasil!");
 
-    await db.sync(); // Bisa tambahkan { force: true } kalau mau reset tabel
+    await db.sync();
     console.log("Semua tabel berhasil disinkronisasi.");
   } catch (err) {
     console.error("Gagal konek DB:", err);
-    throw err;
   }
-};
+})();
 
 export default syncDB;
 export { Users, DaftarKonser, Merchandise };

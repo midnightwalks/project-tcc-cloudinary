@@ -7,13 +7,12 @@ const {
   DB_HOST: host,
   DB_USERNAME: username,
   DB_PASSWORD: password,
-  DB_NAME: database,
+  DB_NAME: name,
 } = getEnv();
 
-const db = new Sequelize(database, username, password, {
+const db = new Sequelize(name, username, password, {
   host: host,
   dialect: "mysql",
 });
 
 export default db;
-db.sync();
