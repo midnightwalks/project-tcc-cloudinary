@@ -14,120 +14,85 @@ function DaftarMerchandiseApp() {
   const [stok, setStok] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
   const [gambar, setGambar] = useState(null);
+  const [gambarPreview, setGambarPreview] = useState(""); // Preview URL
 
   useEffect(() => {
     fetchMerch();
   }, []);
 
-  const fetchMerch = async () => {
-    try {
-      const response = await axios.get(${BASE_URL}/merchandise);
-      const mappedData = response.data.data.map(item => ({
-        ...item,
-        harga: item.harga_barang,
+// Handle file selection for adding merchandise
+const handleMerchFileChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+      alert('Hanya file gambar (JPEG, PNG, GIF) yang diperbolehkan!');
+      return;
+    }
+
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      alert('Ukuran file terlalu besar! Maksimal 5MB.');
+      return;
+    }
+
+    setGambar(file);
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setGambarPreview(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+// Add merchandise
+const addMerch = async () => {
+  if (!namaMerch.trim() || !harga || !stok || !deskripsi.trim()) {
+    alert('Mohon lengkapi semua field yang wajib diisi!');
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append("nama_barang", namaMerch);
+    formData.append("harga_barang", harga);
+    formData.append("stok", stok);
+    formData.append("deskripsi", deskripsi);
+    if (gambar) {
+      formData.append("gambar", gambar);
+    }
+
+    const response = await axios.post(`${BASE_URL}/merchandise`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response.data.data) {
+      const newItem = {
+        ...response.data.data,
+        harga: response.data.data.harga_barang,
         isEditing: false,
-      }));
-      setMerchList(mappedData);
-    } catch (error) {
-      console.error("Error fetching merchandise:", error);
+      };
+      setMerchList((prev) => [...prev, newItem]);
+
+      // Reset form
+      setNamaMerch("");
+      setHarga("");
+      setStok("");
+      setDeskripsi("");
+      setGambar(null);
+      setGambarPreview("");
+      document.getElementById("gambar-merch-input").value = "";
+
+      alert("Merchandise berhasil ditambahkan!");
     }
-  };
-
-  const addMerch = async () => {
-    if (!namaMerch.trim() || !harga || !stok || !deskripsi.trim()) return;
-
-    try {
-      const formData = new FormData();
-      formData.append("nama_barang", namaMerch);
-      formData.append("harga_barang", harga);
-      formData.append("stok", stok);
-      formData.append("deskripsi", deskripsi);
-      if (gambar) {
-        formData.append("gambar", gambar);
-      }
-
-      const response = await axios.post(${BASE_URL}/merchandise, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      if (response.data.data) {
-        const newItem = {
-          ...response.data.data,
-          harga: response.data.data.harga_barang,
-          isEditing: false,
-        };
-        setMerchList((prev) => [...prev, newItem]);
-        setNamaMerch("");
-        setHarga("");
-        setStok("");
-        setDeskripsi("");
-        setGambar(null);
-      }
-    } catch (error) {
-      console.error("Error adding merchandise:", error);
-    }
-  };
-
-  const deleteMerch = async (id) => {
-    try {
-      await axios.delete(${BASE_URL}/merchandise/${id});
-      setMerchList((prev) => prev.filter((merch) => merch.id !== id));
-    } catch (error) {
-      console.error("Error deleting merchandise:", error);
-    }
-  };
-
-  const toggleEditMode = (id) => {
-    setMerchList((prev) =>
-      prev.map((merch) =>
-        merch.id === id ? { ...merch, isEditing: !merch.isEditing } : merch
-      )
-    );
-  };
-
-  const handleInputChange = (id, field, value) => {
-    setMerchList((prev) =>
-      prev.map((merch) =>
-        merch.id === id ? { ...merch, [field]: value } : merch
-      )
-    );
-  };
-
-  const saveMerch = async (id, updatedMerch) => {
-    if (
-      !updatedMerch.nama_barang.trim() ||
-      !updatedMerch.harga ||
-      !updatedMerch.stok ||
-      !updatedMerch.deskripsi.trim()
-    ) return;
-
-    try {
-      const formData = new FormData();
-      formData.append("nama_barang", updatedMerch.nama_barang);
-      formData.append("harga_barang", updatedMerch.harga);
-      formData.append("stok", updatedMerch.stok);
-      formData.append("deskripsi", updatedMerch.deskripsi);
-      if (updatedMerch.gambar instanceof File) {
-        formData.append("gambar", updatedMerch.gambar);
-      }
-
-      const response = await axios.put(${BASE_URL}/merchandise/${id}, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      if (response.data.data) {
-        await fetchMerch();
-      } else {
-        alert("Gagal simpan data");
-      }
-    } catch (error) {
-      console.error("Error updating merchandise:", error);
-    }
-  };
+  } catch (error) {
+    console.error("Error adding merchandise:", error);
+    alert("Gagal menambahkan merchandise. Silakan coba lagi.");
+  }
+};
 
   const handleLogout = async () => {
     await logout();
