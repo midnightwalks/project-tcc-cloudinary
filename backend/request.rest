@@ -1,11 +1,10 @@
 ### Register User (POST /register)
-POST http://localhost:5000/register
+POST https://project-backend-598740328533.us-central1.run.app/login
 Content-Type: application/json
 
 {
-  "username": "123",
-  "password": "123",
-  "confirm_password": "123"
+  "username": "resti",
+  "password": "taitaitai"
 }
 
 ### Login User (POST /login)
