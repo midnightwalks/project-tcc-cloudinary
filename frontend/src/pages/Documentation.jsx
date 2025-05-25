@@ -4,113 +4,9 @@ import { useNavigate } from "react-router-dom";
 export default function Documentation() {
   const navigate = useNavigate();
 
-  const apiDocs = [
-    {
-      method: "POST",
-      endpoint: "/register",
-      deskripsi: "Register user baru",
-      body: { "username": "...", "password": "..." },
-      response: "201 Created, 500 Error",
-    },
-    {
-      method: "POST",
-      endpoint: "/login",
-      deskripsi: "Login dan dapatkan token",
-      body: { "username": "...", "password": "..." },
-      response: "200 OK, 401/404 Error",
-    },
-    {
-      method: "GET",
-      endpoint: "/token",
-      deskripsi: "Refresh token dari cookie",
-      body: "-",
-      response: "200 OK, 401/403 Error",
-    },
-    {
-      method: "DELETE",
-      endpoint: "/logout",
-      deskripsi: "Logout dan hapus refresh token",
-      body: "-",
-      response: "200 OK, 204 No Content",
-    },
-    {
-      method: "GET",
-      endpoint: "/daftarkonser",
-      deskripsi: "Ambil semua data konser",
-      body: "-",
-      response: "200 OK",
-    },
-    {
-      method: "GET",
-      endpoint: "/daftarkonser/:id",
-      deskripsi: "Ambil data konser berdasarkan ID",
-      body: URL,
-      Params: id,
-      response: "200 OK, 404 Not Found",
-    },
-    {
-      method: "POST",
-      endpoint: "/daftarkonser",
-      deskripsi: "Tambah data konser baru",
-      body: { "nama": "...", "tanggal": "...", "lokasi": "..." },
-      response: "201 Created, 400/500 Error",
-    },
-    {
-      method: "PUT",
-      endpoint: "/daftarkonser/:id",
-      deskripsi: "Update data konser berdasarkan ID",
-      body: { "nama": "...", "tanggal": "...", "lokasi": "..." },
-      response: "200 OK, 400/404/500 Error",
-    },
-    {
-      method: "DELETE",
-      endpoint: "/daftarkonser/:id",
-      deskripsi: "Hapus data konser berdasarkan ID",
-      body: URL,
-      Params: id,
-      response: "200 OK, 404 Not Found",
-    },
-    {
-      method: "GET",
-      endpoint: "/merchandise",
-      deskripsi: "Ambil semua data merchandise",
-      body: "-",
-      response: "200 OK",
-    },
-    {
-      method: "GET",
-      endpoint: "/merchandise/:id",
-      deskripsi: "Ambil data merchandise berdasarkan ID",
-      body: URL,
-      Params: id,
-      response: "200 OK, 404 Not Found",
-    },
-    {
-      method: "POST",
-      endpoint: "/merchandise",
-      deskripsi: "Tambah data merchandise baru",
-      body: { "nama": "...", "harga": "...", "stok": "..." },
-      response: "201 Created, 400/500 Error",
-    },
-    {
-      method: "PUT",
-      endpoint: "/merchandise/:id",
-      deskripsi: "Update data merchandise berdasarkan ID",
-      body: { "nama": "...", "harga": "...", "stok": "..." },
-      response: "200 OK, 400/404/500 Error",
-    },
-    {
-      method: "DELETE",
-      endpoint: "/merchandise/:id",
-      deskripsi: "Hapus data merchandise berdasarkan ID",
-      body: UR,
-      Params: id,
-      response: "200 OK, 404 Not Found",
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-purple-50 flex flex-col items-center p-8 relative">
+      {/* Tombol Back di kanan atas */}
       <button
         onClick={() => navigate("/dashboard")}
         className="absolute top-8 right-8 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
@@ -120,27 +16,101 @@ export default function Documentation() {
 
       <h1 className="text-4xl font-bold text-purple-700 mb-8 mt-4">Dokumentasi REST API</h1>
 
-      <div className="overflow-x-auto w-full max-w-7xl bg-white rounded-lg shadow p-6">
-        <table className="w-full table-auto border-collapse border border-gray-300 text-sm">
+      <div className="overflow-x-auto w-full max-w-6xl bg-white rounded-lg shadow p-6">
+        <table className="w-full table-auto border-collapse border border-gray-300">
           <thead>
             <tr className="bg-purple-100">
               <th className="border border-gray-300 px-4 py-2 text-left">Method</th>
               <th className="border border-gray-300 px-4 py-2 text-left">Endpoint</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Auth</th>
               <th className="border border-gray-300 px-4 py-2 text-left">Deskripsi</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Body / Parameter</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Response</th>
             </tr>
           </thead>
           <tbody>
-            {apiDocs.map((doc, index) => (
-              <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-                <td className="border border-gray-300 px-4 py-2">{doc.method}</td>
-                <td className="border border-gray-300 px-4 py-2">{doc.endpoint}</td>
-                <td className="border border-gray-300 px-4 py-2">{doc.deskripsi}</td>
-                <td className="border border-gray-300 px-4 py-2 whitespace-pre-wrap">{doc.body}</td>
-                <td className="border border-gray-300 px-4 py-2">{doc.response}</td>
-              </tr>
-            ))}
+            <tr>
+              <td className="border border-gray-300 px-4 py-2">POST</td>
+              <td className="border border-gray-300 px-4 py-2">/register</td>
+              <td className="border border-gray-300 px-4 py-2">No</td>
+              <td className="border border-gray-300 px-4 py-2">Registrasi user baru</td>
+            </tr>
+            <tr className="bg-gray-50">
+              <td className="border border-gray-300 px-4 py-2">POST</td>
+              <td className="border border-gray-300 px-4 py-2">/login</td>
+              <td className="border border-gray-300 px-4 py-2">No</td>
+              <td className="border border-gray-300 px-4 py-2">Login user dan dapatkan token</td>
+            </tr>
+            <tr>
+              <td className="border border-gray-300 px-4 py-2">GET</td>
+              <td className="border border-gray-300 px-4 py-2">/token</td>
+              <td className="border border-gray-300 px-4 py-2">No</td>
+              <td className="border border-gray-300 px-4 py-2">Dapatkan access token baru dengan refresh token</td>
+            </tr>
+            <tr className="bg-gray-50">
+              <td className="border border-gray-300 px-4 py-2">DELETE</td>
+              <td className="border border-gray-300 px-4 py-2">/logout</td>
+              <td className="border border-gray-300 px-4 py-2">No</td>
+              <td className="border border-gray-300 px-4 py-2">Logout user dan hapus refresh token</td>
+            </tr>
+            <tr>
+              <td className="border border-gray-300 px-4 py-2">GET</td>
+              <td className="border border-gray-300 px-4 py-2">/daftarkonser</td>
+              <td className="border border-gray-300 px-4 py-2">No</td>
+              <td className="border border-gray-300 px-4 py-2">Ambil semua data konser</td>
+            </tr>
+            <tr className="bg-gray-50">
+              <td className="border border-gray-300 px-4 py-2">GET</td>
+              <td className="border border-gray-300 px-4 py-2">/daftarkonser/:id</td>
+              <td className="border border-gray-300 px-4 py-2">No</td>
+              <td className="border border-gray-300 px-4 py-2">Ambil data konser berdasarkan ID</td>
+            </tr>
+            <tr>
+              <td className="border border-gray-300 px-4 py-2">POST</td>
+              <td className="border border-gray-300 px-4 py-2">/daftarkonser</td>
+              <td className="border border-gray-300 px-4 py-2">Yes</td>
+              <td className="border border-gray-300 px-4 py-2">Tambah data konser baru</td>
+            </tr>
+            <tr className="bg-gray-50">
+              <td className="border border-gray-300 px-4 py-2">PUT</td>
+              <td className="border border-gray-300 px-4 py-2">/daftarkonser/:id</td>
+              <td className="border border-gray-300 px-4 py-2">Yes</td>
+              <td className="border border-gray-300 px-4 py-2">Update data konser berdasarkan ID</td>
+            </tr>
+            <tr>
+              <td className="border border-gray-300 px-4 py-2">DELETE</td>
+              <td className="border border-gray-300 px-4 py-2">/daftarkonser/:id</td>
+              <td className="border border-gray-300 px-4 py-2">Yes</td>
+              <td className="border border-gray-300 px-4 py-2">Hapus data konser berdasarkan ID</td>
+            </tr>
+            <tr className="bg-gray-50">
+              <td className="border border-gray-300 px-4 py-2">GET</td>
+              <td className="border border-gray-300 px-4 py-2">/merchandise</td>
+              <td className="border border-gray-300 px-4 py-2">No</td>
+              <td className="border border-gray-300 px-4 py-2">Ambil semua data merchandise</td>
+            </tr>
+            <tr>
+              <td className="border border-gray-300 px-4 py-2">GET</td>
+              <td className="border border-gray-300 px-4 py-2">/merchandise/:id</td>
+              <td className="border border-gray-300 px-4 py-2">No</td>
+              <td className="border border-gray-300 px-4 py-2">Ambil data merchandise berdasarkan ID</td>
+            </tr>
+            <tr className="bg-gray-50">
+              <td className="border border-gray-300 px-4 py-2">POST</td>
+              <td className="border border-gray-300 px-4 py-2">/merchandise</td>
+              <td className="border border-gray-300 px-4 py-2">Yes</td>
+              <td className="border border-gray-300 px-4 py-2">Tambah data merchandise baru</td>
+            </tr>
+            <tr>
+              <td className="border border-gray-300 px-4 py-2">PUT</td>
+              <td className="border border-gray-300 px-4 py-2">/merchandise/:id</td>
+              <td className="border border-gray-300 px-4 py-2">Yes</td>
+              <td className="border border-gray-300 px-4 py-2">Update data merchandise berdasarkan ID</td>
+            </tr>
+            <tr className="bg-gray-50">
+              <td className="border border-gray-300 px-4 py-2">DELETE</td>
+              <td className="border border-gray-300 px-4 py-2">/merchandise/:id</td>
+              <td className="border border-gray-300 px-4 py-2">Yes</td>
+              <td className="border border-gray-300 px-4 py-2">Hapus data merchandise berdasarkan ID</td>
+            </tr>
           </tbody>
         </table>
       </div>
