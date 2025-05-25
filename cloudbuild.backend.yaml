@@ -1,4 +1,10 @@
 steps:
+
+  # 0.
+  - name: "gcr.io/cloud-builders/gsutil"
+    args: ["cp", "${_ENV}", ".env"]
+    dir: "backend"
+
   # 1. Build Docker image untuk backend
   - name: "gcr.io/cloud-builders/docker"
     args: ["build", "--cache-from", "gcr.io/$PROJECT_ID/project-backend", "-t", "gcr.io/$PROJECT_ID/project-backend:${SHORT_SHA}", "."]
@@ -25,8 +31,6 @@ steps:
         "--region",
         "us-central1",
         "--allow-unauthenticated",
-        "--set-env-vars",
-        "ACCESS_TOKEN_SECRET=${_ACCESS_TOKEN_SECRET},REFRESH_TOKEN_SECRET=${_REFRESH_TOKEN_SECRET},DB_HOST=${_DB_HOST},DB_NAME=${_DB_NAME},DB_PASSWORD=${_DB_PASSWORD},DB_USERNAME=${_DB_USERNAME}"
       ]
 
 # Log hanya akan disimpan di Google Cloud Logging
