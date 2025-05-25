@@ -1,12 +1,14 @@
 import { Sequelize } from "sequelize";
-import { getEnv } from "../utils.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const {
-  DB_HOST: host,
   DB_NAME: name,
+  DB_HOST: host,
   DB_USERNAME: username,
   DB_PASSWORD: password,
-} = getEnv();
+} = process.env;
 
 const db = new Sequelize(name, username, password, {
   host: host,
@@ -14,3 +16,4 @@ const db = new Sequelize(name, username, password, {
 });
 
 export default db;
+db.sync();
