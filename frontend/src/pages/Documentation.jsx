@@ -23,28 +23,28 @@ export default function Documentation() {
       method: "GET",
       endpoint: "/token",
       deskripsi: "Refresh token dari cookie",
-      body: "-",
+      body: -,
       response: "200 OK, 401/403 Error",
     },
     {
       method: "DELETE",
       endpoint: "/logout",
       deskripsi: "Logout dan hapus refresh token",
-      body: "-",
+      body: -,
       response: "200 OK, 204 No Content",
     },
     {
       method: "GET",
       endpoint: "/daftarkonser",
       deskripsi: "Ambil semua data konser",
-      body: "-",
+      body: -,
       response: "200 OK",
     },
     {
       method: "GET",
       endpoint: "/daftarkonser/:id",
       deskripsi: "Ambil data konser berdasarkan ID",
-      body: "URL Params: id",
+      body: URL Params: id,
       response: "200 OK, 404 Not Found",
     },
     {
@@ -65,21 +65,21 @@ export default function Documentation() {
       method: "DELETE",
       endpoint: "/daftarkonser/:id",
       deskripsi: "Hapus data konser berdasarkan ID",
-      body: "URL Params: id",
+      body: URL Params: id,
       response: "200 OK, 404 Not Found",
     },
     {
       method: "GET",
       endpoint: "/merchandise",
       deskripsi: "Ambil semua data merchandise",
-      body: "-",
+      body: -,
       response: "200 OK",
     },
     {
       method: "GET",
       endpoint: "/merchandise/:id",
       deskripsi: "Ambil data merchandise berdasarkan ID",
-      body: "URL Params: id",
+      body: URL Params: id,
       response: "200 OK, 404 Not Found",
     },
     {
@@ -100,7 +100,7 @@ export default function Documentation() {
       method: "DELETE",
       endpoint: "/merchandise/:id",
       deskripsi: "Hapus data merchandise berdasarkan ID",
-      body: "URL Params: id",
+      body: URL Params: id,
       response: "200 OK, 404 Not Found",
     },
   ];
@@ -142,4 +142,4 @@ export default function Documentation() {
       </div>
     </div>
   );
-};
+}
