@@ -303,7 +303,7 @@ function DaftarKonserApp() {
                       {(konser.gambarPreview || konser.gambar) && (
                         <div className="mb-2">
                           <img
-                            src={konser.gambar || `${BASE_URL}/uploads/${konser.gambar}`}
+                            src={konser.gambarPreview || `${BASE_URL}/uploads/${konser.gambar}`}
                             alt="Preview"
                             className="h-32 w-full object-cover rounded"
                           />
@@ -340,15 +340,16 @@ function DaftarKonserApp() {
                     <>
                       {konser.gambar ? (
                         <img
-                          src={`${BASE_URL}/uploads/${konser.gambar}`}
-                          alt={konser.nama_konser}
-                          className="h-40 w-full object-cover rounded mb-3"
-                          onLoad={() => console.log('Image loaded:', `${BASE_URL}/uploads/${konser.gambar}`)}
-                          onError={(e) => {
-                            console.error('Image failed to load:', `${BASE_URL}/uploads/${konser.gambar}`);
-                            e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100%" height="100%" fill="%23f3f4f6"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%236b7280">No Image</text></svg>';
-                          }}
-                        />
+  src={konser.gambar}
+  alt={konser.nama_konser}
+  className="h-40 w-full object-cover rounded mb-3"
+  onLoad={() => console.log('Image loaded:', konser.gambar)}
+  onError={(e) => {
+    console.error('Image failed to load:', konser.gambar);
+    e.target.src =
+      'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100%" height="100%" fill="%23f3f4f6"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%236b7280">No Image</text></svg>';
+  }}
+/>
                       ) : (
                         <div className="h-40 w-full bg-gray-200 rounded mb-3 flex items-center justify-center text-gray-400 italic">
                           No Image
@@ -368,13 +369,13 @@ function DaftarKonserApp() {
                           onClick={() => toggleEditMode(konser.id)}
                           className="flex-1 bg-purple-400 hover:bg-purple-500 text-white py-2 rounded"
                         >
-                          ✏️ Edit
+                          ✏ Edit
                         </button>
                         <button
                           onClick={() => deleteKonser(konser.id)}
                           className="flex-1 bg-purple-500 hover:bg-purple-600 text-white py-2 rounded"
                         >
-                          🗑️ Hapus
+                          🗑 Hapus
                         </button>
                       </div>
                     </>
