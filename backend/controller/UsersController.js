@@ -49,7 +49,7 @@ export const Login = async (req, res) => {
     const accessToken = jwt.sign(
       { id: user.id, username: user.username },
       ACCESS_TOKEN_SECRET,
-      { expiresIn: "30s" }
+      { expiresIn: "5h" }
     );
     const refreshToken = jwt.sign(
       { id: user.id, username: user.username },
