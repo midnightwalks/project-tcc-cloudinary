@@ -11,10 +11,7 @@ import route from "./routes/route.js";
 import syncDB from "./model/index.js"; // Pastikan ini return Promise/async
 
 const app = express();
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+const port = process.env.PORT || 5000;
 
 const corsOptions = {
   origin: ["https://project-konser-dot-a-06-new.uc.r.appspot.com/"], // sesuaikan dengan frontend URL
