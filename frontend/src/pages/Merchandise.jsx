@@ -13,90 +13,183 @@ function DaftarMerchandiseApp() {
   const [harga, setHarga] = useState("");
   const [stok, setStok] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
-  const [gambar, setGambar] = useState(null);
+  const [gambarFile, setGambarFile] = useState(null); // File object
   const [gambarPreview, setGambarPreview] = useState(""); // Preview URL
 
   useEffect(() => {
     fetchMerch();
   }, []);
 
-// Handle file selection for adding merchandise
-const handleMerchFileChange = (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-    if (!allowedTypes.includes(file.type)) {
-      alert('Hanya file gambar (JPEG, PNG, GIF) yang diperbolehkan!');
-      return;
-    }
-
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    if (file.size > maxSize) {
-      alert('Ukuran file terlalu besar! Maksimal 5MB.');
-      return;
-    }
-
-    setGambar(file);
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setGambarPreview(e.target.result);
-    };
-    reader.readAsDataURL(file);
-  }
-};
-
-// Add merchandise
-const addMerch = async () => {
-  if (!namaMerch.trim() || !harga || !stok || !deskripsi.trim()) {
-    alert('Mohon lengkapi semua field yang wajib diisi!');
-    return;
-  }
-
-  try {
-    const formData = new FormData();
-    formData.append("nama_barang", namaMerch);
-    formData.append("harga_barang", harga);
-    formData.append("stok", stok);
-    formData.append("deskripsi", deskripsi);
-    if (gambar) {
-      formData.append("gambar", gambar);
-    }
-
-    const response = await axios.post(`${BASE_URL}/merchandise`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
-    if (response.data.data) {
-      const newItem = {
-        ...response.data.data,
-        harga: response.data.data.harga_barang,
+  const fetchMerch = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/merchandise`);
+      const mappedData = response.data.data.map(item => ({
+        ...item,
+        harga: item.harga_barang,
         isEditing: false,
-      };
-      setMerchList((prev) => [...prev, newItem]);
-
-      // Reset form
-      setNamaMerch("");
-      setHarga("");
-      setStok("");
-      setDeskripsi("");
-      setGambar(null);
-      setGambarPreview("");
-      document.getElementById("gambar-merch-input").value = "";
-
-      alert("Merchandise berhasil ditambahkan!");
+      }));
+      setMerchList(mappedData);
+    } catch (error) {
+      console.error("Error fetching merchandise:", error);
     }
-  } catch (error) {
-    console.error("Error adding merchandise:", error);
-    alert("Gagal menambahkan merchandise. Silakan coba lagi.");
-  }
-};
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('Hanya file gambar (JPEG, PNG, GIF) yang diperbolehkan!');
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        alert('Ukuran file terlalu besar! Maksimal 5MB.');
+        return;
+      }
+
+      setGambarFile(file);
+      
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setGambarPreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Handle file change for editing
+  const handleEditFileChange = (id, e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('Hanya file gambar (JPEG, PNG, GIF) yang diperbolehkan!');
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        alert('Ukuran file terlalu besar! Maksimal 5MB.');
+        return;
+      }
+
+      // Update the konser list with file object and preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setKonserList((prev) =>
+          prev.map((konser) =>
+            konser.id === id 
+              ? { 
+                  ...konser, 
+                  gambarFile: file,
+                  gambarPreview: e.target.result
+                } 
+              : konser
+          )
+        );
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const addMerch = async () => {
+    if (!namaMerch.trim() || !harga || !stok || !deskripsi.trim()) {
+      alert('Mohon lengkapi semua field yang wajib diisi!');
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${BASE_URL}/merchandise`, {
+        nama_barang: namaMerch,
+        harga_barang: Number(harga),
+        stok: Number(stok),
+        deskripsi,
+        gambar,
+      });
+      if (response.data.data) {
+        const newItem = {
+          ...response.data.data,
+          harga: response.data.data.harga_barang,
+          isEditing: false,
+        };
+        setMerchList((prev) => [...prev, newItem]);
+        setNamaMerch("");
+        setHarga("");
+        setStok("");
+        setDeskripsi("");
+        setGambar("");
+      }
+    } catch (error) {
+      console.error("Error adding merchandise:", error);
+    }
+  };
+
+  const deleteMerch = async (id) => {
+    try {
+      await axios.delete(`${BASE_URL}/merchandise/${id}`);
+      setMerchList((prev) => prev.filter((merch) => merch.id !== id));
+    } catch (error) {
+      console.error("Error deleting merchandise:", error);
+    }
+  };
+
+  const toggleEditMode = (id) => {
+    setMerchList((prev) =>
+      prev.map((merch) =>
+        merch.id === id ? { ...merch, isEditing: !merch.isEditing } : merch
+      )
+    );
+  };
+
+  const handleInputChange = (id, field, value) => {
+    setMerchList((prev) =>
+      prev.map((merch) =>
+        merch.id === id ? { ...merch, [field]: value } : merch
+      )
+    );
+  };
+
+  const saveMerch = async (id, updatedMerch) => {
+    if (
+      !updatedMerch.nama_barang.trim() ||
+      !updatedMerch.harga ||
+      !updatedMerch.stok ||
+      !updatedMerch.deskripsi.trim()
+    ) return;
+
+    try {
+      const response = await axios.put(`${BASE_URL}/merchandise/${id}`, {
+        nama_barang: updatedMerch.nama_barang,
+        harga_barang: Number(updatedMerch.harga),
+        stok: Number(updatedMerch.stok),
+        deskripsi: updatedMerch.deskripsi,
+        gambar: updatedMerch.gambar,
+      });
+
+      if (response.data.data) {
+        await fetchMerch();
+      } else {
+        alert("Gagal simpan data");
+      }
+    } catch (error) {
+      console.error("Error updating merchandise:", error);
+    }
+  };
 
   const handleLogout = async () => {
     await logout();
     navigate("/login");
+  };
+
+  const handleRefresh = async () => {
+    await fetchMerch();
   };
 
   return (
@@ -107,11 +200,12 @@ const addMerch = async () => {
           onClick={() => navigate("/dashboard")}
           className="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg shadow"
         >
-          Back
+        Back
         </button>
       </div>
 
       <div className="flex flex-1 gap-6 flex-col md:flex-row">
+        {/* KIRI: List merchandise dalam kotak-kotak grid */}
         <div className="flex-1 bg-white rounded-lg shadow p-4 overflow-auto max-h-[70vh]">
           <div className="flex justify-between items-center mb-4 border-b border-purple-200 pb-2">
             <h2 className="font-semibold text-lg text-purple-900">List Merchandise</h2>
@@ -131,33 +225,35 @@ const addMerch = async () => {
                         value={merch.nama_barang}
                         onChange={(e) => handleInputChange(merch.id, "nama_barang", e.target.value)}
                         placeholder="Nama Merchandise"
-                        className="mb-2 p-2 border rounded"
+                        className="mb-2 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-purple-400"
                       />
                       <input
                         type="number"
                         value={merch.harga}
                         onChange={(e) => handleInputChange(merch.id, "harga", e.target.value)}
                         placeholder="Harga"
-                        className="mb-2 p-2 border rounded"
+                        className="mb-2 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-purple-400"
                       />
                       <input
                         type="number"
                         value={merch.stok}
                         onChange={(e) => handleInputChange(merch.id, "stok", e.target.value)}
                         placeholder="Stok"
-                        className="mb-2 p-2 border rounded"
+                        className="mb-2 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-purple-400"
                       />
                       <textarea
                         value={merch.deskripsi}
                         onChange={(e) => handleInputChange(merch.id, "deskripsi", e.target.value)}
                         placeholder="Deskripsi"
-                        className="mb-2 p-2 border rounded"
+                        rows={3}
+                        className="mb-2 p-2 border rounded resize-y focus:outline-none focus:ring-2 focus:ring-purple-400"
                       />
                       <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleInputChange(merch.id, "gambar", e.target.files[0])}
-                        className="mb-4 p-2 border rounded"
+                        type="text"
+                        value={merch.gambar || ""}
+                        onChange={(e) => handleInputChange(merch.id, "gambar", e.target.value)}
+                        placeholder="URL Gambar"
+                        className="mb-4 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-purple-400"
                       />
                       <div className="flex gap-2 mt-auto">
                         <button
@@ -165,15 +261,15 @@ const addMerch = async () => {
                             saveMerch(merch.id, merch);
                             toggleEditMode(merch.id);
                           }}
-                          className="flex-1 bg-green-500 text-white py-2 rounded"
+                          className="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 rounded"
                         >
-                          Simpan
+                          💾 Simpan
                         </button>
                         <button
                           onClick={() => toggleEditMode(merch.id)}
-                          className="flex-1 bg-gray-400 text-white py-2 rounded"
+                          className="flex-1 bg-gray-400 hover:bg-gray-500 text-white py-2 rounded"
                         >
-                          Batal
+                          ✖ Batal
                         </button>
                       </div>
                     </>
@@ -181,7 +277,7 @@ const addMerch = async () => {
                     <>
                       {merch.gambar ? (
                         <img
-                          src={${BASE_URL}${merch.gambar}}
+                          src={merch.gambar}
                           alt={merch.nama_barang}
                           className="h-40 w-full object-cover rounded mb-3"
                         />
@@ -190,24 +286,25 @@ const addMerch = async () => {
                           No Image
                         </div>
                       )}
+
                       <h3 className="text-xl font-semibold mb-1">{merch.nama_barang}</h3>
                       <p className="text-purple-700 font-bold mb-1">
                         Rp {Number(merch.harga).toLocaleString("id-ID")}
                       </p>
                       <p className="mb-1">Stok: {merch.stok}</p>
-                      <p className="text-gray-700 text-sm mb-4">{merch.deskripsi}</p>
+                      <p className="text-gray-700 text-sm line-clamp-3 mb-4">{merch.deskripsi}</p>
                       <div className="flex gap-2 mt-auto">
                         <button
                           onClick={() => toggleEditMode(merch.id)}
-                          className="flex-1 bg-purple-400 text-white py-2 rounded"
+                          className="flex-1 bg-purple-400 hover:bg-purple-500 text-white py-2 rounded"
                         >
-                          Edit
+                          ✏️ Edit
                         </button>
                         <button
                           onClick={() => deleteMerch(merch.id)}
-                          className="flex-1 bg-purple-500 text-white py-2 rounded"
+                          className="flex-1 bg-purple-500 hover:bg-purple-600 text-white py-2 rounded"
                         >
-                          Hapus
+                          🗑️ Hapus
                         </button>
                       </div>
                     </>
@@ -220,6 +317,7 @@ const addMerch = async () => {
           )}
         </div>
 
+        {/* KANAN: Form input tambah merchandise */}
         <div className="w-full md:w-96 bg-purple-50 p-6 rounded-lg shadow">
           <h2 className="text-xl font-semibold text-purple-700 mb-4">Tambah Merchandise</h2>
 
@@ -228,37 +326,36 @@ const addMerch = async () => {
             value={namaMerch}
             onChange={(e) => setNamaMerch(e.target.value)}
             placeholder="Nama Merchandise"
-            className="w-full px-3 py-2 border rounded mb-3"
+            className="w-full px-3 py-2 border border-purple-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-purple-300"
           />
           <input
             type="number"
             value={harga}
             onChange={(e) => setHarga(e.target.value)}
             placeholder="Harga"
-            className="w-full px-3 py-2 border rounded mb-3"
+            className="w-full px-3 py-2 border border-purple-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-purple-300"
           />
           <input
             type="number"
             value={stok}
             onChange={(e) => setStok(e.target.value)}
             placeholder="Stok"
-            className="w-full px-3 py-2 border rounded mb-3"
+            className="w-full px-3 py-2 border border-purple-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-purple-300"
           />
           <textarea
             value={deskripsi}
             onChange={(e) => setDeskripsi(e.target.value)}
             placeholder="Deskripsi"
-            className="w-full px-3 py-2 border rounded mb-3"
+            rows={4}
+            className="w-full px-3 py-2 border border-purple-300 rounded mb-3 resize-y focus:outline-none focus:ring-2 focus:ring-purple-300"
           />
-          {/* File input for image upload */}
           <input
-            id="gambar-input"
             type="file"
             accept="image/*"
-            onChange={handleFileChange}
+            onChange={(e) => setGambar(e.target.files[0])}
             className="w-full px-3 py-2 border border-purple-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-purple-300"
           />
-          
+
           {/* Image preview */}
           {gambarPreview && (
             <div className="mb-3">
@@ -272,9 +369,9 @@ const addMerch = async () => {
 
           <button
             onClick={addMerch}
-            className="w-full bg-purple-600 text-white py-3 rounded"
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded shadow"
           >
-            Tambah Merchandise
+            ➕ Tambah Merchandise
           </button>
         </div>
       </div>
