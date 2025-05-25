@@ -3,9 +3,9 @@ import { getEnv } from "../utils.js";
 
 const {
   DB_HOST: host,
+  DB_NAME: name,
   DB_USERNAME: username,
   DB_PASSWORD: password,
-  DB_NAME: name,
 } = getEnv();
 
 const db = new Sequelize(name, username, password, {
