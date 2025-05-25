@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import dotenv from "dotenv";
+import { getEnv } from "../utils.js";
 
 dotenv.config();
 
