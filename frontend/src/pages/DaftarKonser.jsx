@@ -303,7 +303,7 @@ function DaftarKonserApp() {
                       {(konser.gambarPreview || konser.gambar) && (
                         <div className="mb-2">
                           <img
-                            src={konser.gambarPreview || `${BASE_URL}/uploads/${konser.gambar}`}
+                            src={konser.gambar || `${BASE_URL}/uploads/${konser.gambar}`}
                             alt="Preview"
                             className="h-32 w-full object-cover rounded"
                           />
