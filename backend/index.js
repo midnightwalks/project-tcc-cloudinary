@@ -17,7 +17,7 @@ app.listen(PORT, () => {
 });
 
 const corsOptions = {
-  origin: ["http://localhost:3000"], // sesuaikan dengan frontend URL
+  origin: ["https://project-konser-dot-a-06-new.uc.r.appspot.com/"], // sesuaikan dengan frontend URL
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
