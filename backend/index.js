@@ -11,7 +11,8 @@ const port = process.env.PORT || 5001;
 // Konfigurasi CORS agar mengizinkan domain frontend terdeploy
 const corsOptions = {
   origin: [
-    "https://project-konser-dot-a-06-new.uc.r.appspot.com", // Tambahkan localhost untuk pengembangan lokal
+    "https://project-konser-dot-a-06-new.uc.r.appspot.com", 
+    "http://localhost:5001",   // Tambahkan localhost untuk pengembangan lokal
   ], // Ganti dengan URL frontend yang terdeploy
   credentials: true, // Memungkinkan penggunaan cookies
   methods: ["GET", "POST", "PUT", "DELETE"],
