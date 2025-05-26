@@ -1,3 +1,6 @@
+KONSERIN - Concert Selling Website  
+Made for Cloud Computing Practicum's Project  
+
 cara run:  
 - nyalain xampp  
 - cd backend, npm install, npm run dev   
