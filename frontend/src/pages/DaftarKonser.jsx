@@ -337,11 +337,11 @@ function DaftarKonserApp() {
                       </div>
                     </>
                   ) : (
-                    <>
-                      {konser.gambar ? (
+                      <>
+                        {konser.gambar ? (
                           <img
-                            src={`https://res.cloudinary.com/dn7rrufkn/image/upload/Konser-App/Konser_Images/${konser.gambar}`}
-                            alt={`${konser.nama_konser}`}
+                            src={konser.gambar}
+                            alt={konser.nama_konser}
                             className="h-40 w-full object-cover rounded mb-3"
                             onLoad={() => console.log('Image loaded:', konser.gambar)}
                             onError={(e) => {
@@ -351,7 +351,8 @@ function DaftarKonserApp() {
                             }}
                           />
 
-                      ) : (
+
+                        ) : (
                         <div className="h-40 w-full bg-gray-200 rounded mb-3 flex items-center justify-center text-gray-400 italic">
                           No Image
                         </div>
