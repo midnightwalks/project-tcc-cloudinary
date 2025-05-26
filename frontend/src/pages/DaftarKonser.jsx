@@ -340,7 +340,11 @@ function DaftarKonserApp() {
                       <>
                         {konser.gambar ? (
                           <img
-                            src={konser.gambar}
+                            src={
+                              konser.gambar?.startsWith("http")
+                                ? konser.gambar
+                                : `https://res.cloudinary.com/dn7rrufkn/image/upload/Konser-App/Konser_Images/${konser.gambar}`
+                            }
                             alt={konser.nama_konser}
                             className="h-40 w-full object-cover rounded mb-3"
                             onLoad={() => console.log('Image loaded:', konser.gambar)}
@@ -350,6 +354,7 @@ function DaftarKonserApp() {
                                 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100%" height="100%" fill="%23f3f4f6"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%236b7280">No Image</text></svg>';
                             }}
                           />
+
 
 
                         ) : (
